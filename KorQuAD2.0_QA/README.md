@@ -1,67 +1,24 @@
-# 파일 설명
+# 모델 실험 결과
 
-이 저장소는 4가지 모델을 비교하기 위한 파일들을 포함합니다. 각 모델에 대한 IPython 노트북 파일과 학습된 모델의 weights, 그리고 학습된 word embedding 파일을 함께 첨부했습니다. 필수 제출 파일인 IPython 노트북과 학습된 임베딩 파일을 제외한 나머지 파일들은 '기타 파일들' 폴더에 저장했습니다.
+이 프로젝트에서는 3가지 모델을 구현하여 실험했습니다. 각 모델의 F1 score는 아래와 같습니다. F1 score는 modified DrQA 모델에서 구했습니다.
 
-## 모델과 파일명
+## QANet 모델
+- 파일: `QANet은.ipynb`
+- 설명: 해당 파일에는 모든 모듈에 대한 설명이 상세하게 기록되어 있습니다.
+- 사용된 모델: QANet은 "Combining Local Convolution with Global Self-Attention for Reading Comprehension" 논문의 모델로, https://github.com/kushalj001/pytorch-question-answering의 구현을 변형하여 사용했습니다.
 
-### Lstm with pretrained embedding
-- IPython 노트북: `lstm_with_embedding.ipynb`
-- 모델 weights: `lstm_with_w2v.pt`
+## DrQA 모델
+- 파일: `DrQA.ipynb`
+- 설명: vocab, train data 등을 직접 구현하지 않고, 이전 파일에서 저장한 데이터셋과 vocab 등을 그대로 사용했습니다.
+- 사용된 모델: "Reading Wikipedia to Answer Open-Domain Questions" 논문의 모델을 변형하여 사용했습니다. 구현은 https://github.com/kushalj001/pytorch-question-answering에서 가져왔습니다.
 
-### Lstm without pretrained embedding
-- IPython 노트북: `lstm.ipynb`
-- 모델 weights: `lstm_wo_w2v.pt`
+## modifiedDrQA 모델
+- 파일: `modifiedDrQA.ipynb`
+- 설명: vocab, train data 등을 직접 구현하지 않고, 이전 파일에서 저장한 코드를 그대로 사용했습니다.
+- 사용된 모델: DrQA와 달리 bi-directional LSTM이 아닌 RNN을 사용한 모델입니다.
 
-### Cnn with pretrained embedding
-- IPython 노트북: `cnn_with_embedding.ipynb` (동일한 파일)
-- 모델 weights: `cnn_with_w2v.pt`
+### 결과 분석
+모델의 inference 성능은 전반적으로 좋지 않았습니다. 이는 데이터의 일부만 사용한 메모리 이슈와 Colab GPU 성능 문제로 인해 발생했습니다. 또한, tokenize 등의 이슈도 있었습니다.
 
-### Cnn without pretrained embedding
-- IPython 노트북: `cnn.ipynb`
-- 모델 weights: `cnn_wo_w2v.pt`
-
-### 학습된 임베딩 파일
-`w2v.model`
-
-
-# 개괄
-
-이 저장소에는 총 4가지 모델이 포함되어 있습니다. 이번 실험의 목표는 RNN과 CNN의 결과를 비교하는 것이었습니다.
-
-전반적인 모델 및 학습, 평가 기능은 수업 자료를 참고했습니다. 각 모델은 공통적으로 10개의 epoch를 사용했으며, 아래 4가지 모델의 결과를 비교하고자 했습니다.
-- Lstm with pretrained embedding
-- Lstm without pretrained embedding
-- Cnn with pretrained embedding
-- Cnn without pretrained embedding
-
-# Experiment Results
-
-The models utilizing pre-trained embeddings in both LSTM and CNN showcased high accuracy, with the LSTM model outperforming the CNN model in accuracy. Surprisingly, when not using pre-trained embeddings, the expected significant drop in model accuracy was observed in the CNN model, but the difference between the two models (LSTM with and without pre-trained embeddings) was not as pronounced as anticipated.
-
-## Lstm with pretrained embedding
-- Epoch: 10 | Epoch Time: 1m 8s
-- Train Loss: 0.382 | Train Acc: 82.05%
-- Val. Loss: 0.373 |  Val. Acc: 83.21%
-- Test Loss: 0.380 | Test Acc: 82.96%
-- Inference: 9/10
-
-## Lstm without pretrained embedding
-- Epoch: 10 | Epoch Time: 2m 21s
-- Train Loss: 0.267 | Train Acc: 88.99%
-- Val. Loss: 0.345 |  Val. Acc: 86.62%
-- Test Loss: 0.351 | Test Acc: 86.64%
-- Inference: 8/10
-
-## Cnn with pretrained embedding
-- Epoch: 10 | Epoch Time: 2m 11s
-- Train Loss: 0.407 | Train Acc: 81.55%
-- Val. Loss: 0.427 |  Val. Acc: 80.91%
-- Test Loss: 0.427 | Test Acc: 80.86%
-- Inference: 9/10 
-
-## Cnn without pretrained embedding
-- Epoch: 10 | Epoch Time: 2m 5s
-- Train Loss: 0.690 | Train Acc: 54.61%
-- Val. Loss: 0.674 |  Val. Acc: 61.34%
-- Test Loss: 0.674 | Test Acc: 61.50%
-- Inference: 7/10
+### F1 Score
+전체적으로 모델 성능이 좋지 않아 F1 score가 매우 낮았습니다. 그러나 중복도가 높은 그룹에서는 상대적으로 높은 F1 score를 보였습니다. 이는 예상한 결과와 일치함을 나타냅니다.
